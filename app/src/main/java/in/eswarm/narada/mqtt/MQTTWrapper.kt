@@ -10,10 +10,15 @@ import io.netty.handler.codec.mqtt.MqttQoS
 import java.nio.charset.StandardCharsets
 import java.util.*
 
-object MQTTInitializer {
+object MQTTWrapper {
 
     const val TAG = "MQTTInitializer"
     private var mqttBroker: Server? = null
+
+    val clientsConnected: Int
+        get() {
+            return mqttBroker?.listConnectedClients()?.size ?: 0
+        }
 
     fun startMoquette() {
         mqttBroker = Server()

@@ -1,14 +1,16 @@
 package `in`.eswarm.narada.mqtt
 
-import `in`.eswarm.narada.MainActivity
 import `in`.eswarm.narada.R
+import `in`.eswarm.narada.launch.LaunchActivity
 import `in`.eswarm.narada.util.NotificationUtil.FG_SERVICE_CHANNEL
 import android.app.Notification
 import android.app.PendingIntent
 import android.app.Service
+import android.content.Context
 import android.content.Intent
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -22,12 +24,31 @@ class MQTTService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+
+        if (intent?.action == START) {
+            init()
+            return START_STICKY
+        } else if (intent?.action == STOP) {
+            stop()
+            return START_NOT_STICKY
+        }
+
+        return START_STICKY
+    }
+
+    private fun stop() {
+        MQTTWrapper.stopMoquette()
+        stopForeground(true)
+        stopSelf()
+    }
+
+    private fun init() {
         threadExecutor.submit {
-            MQTTInitializer.startMoquette()
+            MQTTWrapper.startMoquette()
         }
 
         val pendingIntent: PendingIntent =
-            Intent(this, MainActivity::class.java).let { notificationIntent ->
+            Intent(this, LaunchActivity::class.java).let { notificationIntent ->
                 PendingIntent.getActivity(
                     this,
                     0,
@@ -46,8 +67,6 @@ class MQTTService : Service() {
 
         // Notification ID cannot be 0.
         startForeground(NOT_SERVICE_ID, notification)
-
-        return START_STICKY
     }
 
     override fun onBind(intent: Intent): IBinder? {
@@ -56,12 +75,26 @@ class MQTTService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
-        MQTTInitializer.stopMoquette()
+        MQTTWrapper.stopMoquette()
         threadExecutor.shutdownNow()
     }
 
     companion object {
         const val NOT_SERVICE_ID = 987
         const val CHANNEL_DEFAULT = "channel"
+        const val START = "start"
+        const val STOP = "stop"
+
+        fun start(context: Context) {
+            val intent = Intent(context, MQTTService::class.java)
+            intent.action = START
+            ContextCompat.startForegroundService(context, intent)
+        }
+
+        fun stop(context: Context) {
+            val intent = Intent(context, MQTTService::class.java)
+            intent.action = STOP
+            ContextCompat.startForegroundService(context, intent)
+        }
     }
 }
