@@ -3,6 +3,7 @@ package `in`.eswarm.narada.mqtt
 import `in`.eswarm.narada.R
 import `in`.eswarm.narada.launch.LaunchActivity
 import `in`.eswarm.narada.util.NotificationUtil.FG_SERVICE_CHANNEL
+import `in`.eswarm.narada.util.getAppComponent
 import android.app.Notification
 import android.app.PendingIntent
 import android.app.Service
@@ -44,7 +45,8 @@ class MQTTService : Service() {
 
     private fun init() {
         threadExecutor.submit {
-            MQTTWrapper.startMoquette()
+            val mqttListener = getAppComponent().mqttServerListener
+            MQTTWrapper.startMoquette(mqttListener)
         }
 
         val pendingIntent: PendingIntent =

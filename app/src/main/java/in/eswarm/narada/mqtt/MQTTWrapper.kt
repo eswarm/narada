@@ -20,9 +20,9 @@ object MQTTWrapper {
             return mqttBroker?.listConnectedClients()?.size ?: 0
         }
 
-    fun startMoquette() {
+    fun startMoquette(listener: MQTTServerListener) {
         mqttBroker = Server()
-        val userHandlers: List<InterceptHandler?> = listOf(MQTTServerListener())
+        val userHandlers: List<InterceptHandler?> = listOf(listener)
         // TODO :: make the properties configurable
         mqttBroker?.startServer(MemoryConfig(Properties()), userHandlers)
 

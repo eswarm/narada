@@ -12,19 +12,17 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.ExperimentalUnitApi
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
-import androidx.lifecycle.viewmodel.compose.viewModel
 
 @OptIn(ExperimentalUnitApi::class)
 @Composable
 fun LaunchScreen(
     serverStatus: String,
     clientsConnected: Int,
-    launchViewModel: LaunchViewModel = viewModel()
+    launchViewModel: LaunchViewModel
 ) {
     Scaffold(
         floatingActionButton = {
@@ -48,7 +46,7 @@ fun LaunchScreen(
             }
         }
     ) {
-        // Screen content
+
         Column(modifier = Modifier.padding(top = Dp(32f), start = Dp(16f), end = Dp(16f))) {
 
             Row(modifier = Modifier.padding(vertical = Dp(4f))) {
@@ -82,15 +80,18 @@ fun LaunchScreen(
                 val context = LocalContext.current
                 Button(
                     onClick = {
-                        launchViewModel.startServer(context)
+                        launchViewModel.toggleServer(context)
                     },
                     modifier = Modifier
-                        .padding(horizontal = Dp(8f))
+                        .padding(horizontal = Dp(16f))
                         .weight(1f)
                 ) {
-                    Text(text = "Start Server")
+                    val buttonText = if (launchViewModel.isServerRunning.value) "Stop Server"
+                    else "Start Server"
+                    Text(buttonText)
                 }
 
+                /*
                 Button(
                     onClick = { launchViewModel.stopServer(context) },
                     modifier = Modifier
@@ -99,13 +100,15 @@ fun LaunchScreen(
                 ) {
                     Text(text = "Stop Server")
                 }
+
+                 */
             }
 
             Text("Logs", style = MaterialTheme.typography.h5)
 
             NaradaMQTTBrokerTheme(darkTheme = true) {
                 Text(
-                    "Body ".repeat(1000),
+                    launchViewModel.logs.toString(),
                     color = biscuitColor,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -119,10 +122,15 @@ fun LaunchScreen(
     }
 }
 
+
+/*
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
     NaradaMQTTBrokerTheme {
-        LaunchScreen("Running", 0)
+        val context = LocalContext.current
+        LaunchScreen("Running", 0, LaunchViewModel(context))
     }
 }
+
+ */

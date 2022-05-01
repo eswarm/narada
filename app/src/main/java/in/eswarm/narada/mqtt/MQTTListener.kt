@@ -1,46 +1,60 @@
 package `in`.eswarm.narada.mqtt
 
+import `in`.eswarm.narada.log.LogData
+import `in`.eswarm.narada.log.LogStream
+import `in`.eswarm.narada.log.LogType
 import android.util.Log
 import io.moquette.interception.AbstractInterceptHandler
 import io.moquette.interception.messages.*
-import java.nio.charset.StandardCharsets
 
-class MQTTServerListener : AbstractInterceptHandler() {
-
-    companion object {
-        const val TAG = "MQTTServerListener"
-    }
+class MQTTServerListener(private val logStream: LogStream) : AbstractInterceptHandler() {
 
     override fun getID(): String {
         return "MQTTServerListener"
     }
 
     override fun onConnect(msg: InterceptConnectMessage?) {
-        Log.i(TAG, "onConnect :: ${msg?.username}")
+        val logMsg = "Connected ${msg?.username} ${msg?.clientID}"
+        log(logMsg)
     }
 
     override fun onDisconnect(msg: InterceptDisconnectMessage?) {
-        Log.i(TAG, "onDisconnect :: ${msg?.username}")
+        val logMsg = "Disconnected ${msg?.username} ${msg?.clientID}"
+        log(logMsg)
     }
 
     override fun onConnectionLost(msg: InterceptConnectionLostMessage?) {
-        Log.i(TAG, "onConnectionLost :: ${msg?.username}")
+        val logMsg = "Connection Lost for ${msg?.username} ${msg?.clientID}"
+        log(logMsg)
     }
 
     override fun onPublish(msg: InterceptPublishMessage) {
-        val decodedPayload = msg.payload.toString(StandardCharsets.UTF_8)
-        Log.i(TAG, "Received on topic: " + msg.topicName + " content: " + decodedPayload)
+        val logMsg =
+            "Published message on topic ${msg.topicName} by ${msg.username} ${msg.clientID}"
+        log(logMsg)
     }
 
     override fun onSubscribe(msg: InterceptSubscribeMessage?) {
-        Log.i(TAG, "onSubscribe :: ${msg?.username} ${msg?.topicFilter} ")
+        val logMsg = "Subscribed topic ${msg?.topicFilter} by ${msg?.username} ${msg?.clientID}"
+        log(logMsg)
     }
 
     override fun onUnsubscribe(msg: InterceptUnsubscribeMessage?) {
-        Log.i(TAG, "onUnsubscribe :: ${msg?.username} ${msg?.topicFilter} ")
+        val logMsg = "Unsubscribed topic ${msg?.topicFilter} by ${msg?.username} ${msg?.clientID}"
+        log(logMsg)
     }
 
     override fun onMessageAcknowledged(msg: InterceptAcknowledgedMessage?) {
-        Log.i(TAG, "onMessageAcknowledged :: ${msg?.username} ${msg?.topic} ")
+        val logMsg = "Message acknowledged :: ${msg?.username} ${msg?.topic}"
+        log(logMsg)
+    }
+
+    private fun log(logMsg: String) {
+        Log.i(TAG, logMsg)
+        logStream.addLog(LogData(logMsg, LogType.INFO))
+    }
+
+    companion object {
+        const val TAG = "MQTTServerListener"
     }
 }
