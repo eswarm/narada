@@ -5,6 +5,7 @@ import `in`.eswarm.narada.mqtt.MQTTService
 import `in`.eswarm.narada.util.NetworkUtil
 import `in`.eswarm.narada.util.getAppComponent
 import android.content.Context
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -15,12 +16,12 @@ import kotlinx.coroutines.launch
 class LaunchViewModel(val logStream: LogStream) : ViewModel() {
 
     var isServerRunning = mutableStateOf(false)
-    var logs = mutableStateOf(StringBuilder())
+    var logs = mutableStateListOf<String>()
 
     init {
         viewModelScope.launch {
             logStream.logFlow.collect { logData ->
-                logs.value.append(logData.msg)
+                logs.add(logData.msg + "\n")
             }
         }
     }

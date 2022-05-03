@@ -2,6 +2,7 @@ package `in`.eswarm.narada.mqtt
 
 import `in`.eswarm.narada.R
 import `in`.eswarm.narada.launch.LaunchActivity
+import `in`.eswarm.narada.log.LogStream
 import `in`.eswarm.narada.util.NotificationUtil.FG_SERVICE_CHANNEL
 import `in`.eswarm.narada.util.getAppComponent
 import android.app.Notification
@@ -18,9 +19,11 @@ import java.util.concurrent.Executors
 class MQTTService : Service() {
 
     lateinit var threadExecutor: ExecutorService
+    lateinit var logStream: LogStream
 
     override fun onCreate() {
         super.onCreate()
+        logStream = applicationContext.getAppComponent().logStream
         threadExecutor = Executors.newSingleThreadExecutor()
     }
 
@@ -46,7 +49,7 @@ class MQTTService : Service() {
     private fun init() {
         threadExecutor.submit {
             val mqttListener = getAppComponent().mqttServerListener
-            MQTTWrapper.startMoquette(mqttListener)
+            MQTTWrapper.startMoquette(mqttListener, logStream)
         }
 
         val pendingIntent: PendingIntent =

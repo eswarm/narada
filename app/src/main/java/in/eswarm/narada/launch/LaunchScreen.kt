@@ -108,7 +108,7 @@ fun LaunchScreen(
 
             NaradaMQTTBrokerTheme(darkTheme = true) {
                 Text(
-                    launchViewModel.logs.toString(),
+                    launchViewModel.logs.joinToString(),
                     color = biscuitColor,
                     modifier = Modifier
                         .fillMaxWidth()
