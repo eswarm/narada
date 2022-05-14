@@ -20,8 +20,6 @@ import androidx.compose.ui.unit.TextUnitType
 @OptIn(ExperimentalUnitApi::class)
 @Composable
 fun LaunchScreen(
-    serverStatus: String,
-    clientsConnected: Int,
     launchViewModel: LaunchViewModel
 ) {
     Scaffold(
@@ -55,7 +53,7 @@ fun LaunchScreen(
                     style = MaterialTheme.typography.subtitle1
                 )
                 Spacer(modifier = Modifier.weight(1f))
-                Text(serverStatus, lineHeight = TextUnit(24f, TextUnitType.Sp))
+                Text(launchViewModel.serverStatus(), lineHeight = TextUnit(24f, TextUnitType.Sp))
             }
 
             Row(modifier = Modifier.padding(vertical = Dp(4f))) {
@@ -73,7 +71,7 @@ fun LaunchScreen(
                     style = MaterialTheme.typography.subtitle1
                 )
                 Spacer(modifier = Modifier.weight(1f))
-                Text(clientsConnected.toString())
+                Text(launchViewModel.clientsCount.value.toString())
             }
 
             Row(modifier = Modifier.padding(vertical = Dp(16f))) {
@@ -108,7 +106,7 @@ fun LaunchScreen(
 
             NaradaMQTTBrokerTheme(darkTheme = true) {
                 Text(
-                    launchViewModel.logs.joinToString(),
+                    launchViewModel.logs.joinToString(""),
                     color = biscuitColor,
                     modifier = Modifier
                         .fillMaxWidth()

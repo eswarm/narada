@@ -22,7 +22,7 @@ class LaunchActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    LaunchScreen("Running", 0, viewModel(factory = LaunchViewModelFactory(this)))
+                    LaunchScreen(viewModel(factory = LaunchViewModelFactory(this)))
                 }
             }
         }

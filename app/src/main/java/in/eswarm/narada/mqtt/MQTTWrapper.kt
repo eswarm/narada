@@ -3,6 +3,7 @@ package `in`.eswarm.narada.mqtt
 import `in`.eswarm.narada.log.LogData
 import `in`.eswarm.narada.log.LogStream
 import android.util.Log
+import io.moquette.BrokerConstants
 import io.moquette.broker.Server
 import io.moquette.broker.config.MemoryConfig
 import io.moquette.interception.InterceptHandler
@@ -26,7 +27,8 @@ object MQTTWrapper {
         mqttBroker = Server()
         val userHandlers: List<InterceptHandler?> = listOf(listener)
         // TODO :: make the properties configurable
-        mqttBroker?.startServer(MemoryConfig(Properties()), userHandlers)
+
+        mqttBroker?.startServer(getMemoryConfig(), userHandlers)
         logStream.addLog(LogData("Starting Server"))
 
         // TODO :: Is this even relevant.
@@ -63,5 +65,26 @@ object MQTTWrapper {
         } catch (e: Exception) {
             Log.e(TAG, e.message ?: "")
         }
+    }
+
+    fun getMemoryConfig(): MemoryConfig {
+        val defaultProperties = Properties()
+
+        defaultProperties[BrokerConstants.PORT_PROPERTY_NAME] =
+            BrokerConstants.PORT.toString()
+        defaultProperties[BrokerConstants.HOST_PROPERTY_NAME] = BrokerConstants.HOST
+        defaultProperties[BrokerConstants.WEB_SOCKET_PORT_PROPERTY_NAME] =
+            BrokerConstants.WEBSOCKET_PORT.toString()
+        defaultProperties[BrokerConstants.WEB_SOCKET_PATH_PROPERTY_NAME] =
+            BrokerConstants.WEBSOCKET_PATH
+
+        //defaultProperties[BrokerConstants.PASSWORD_FILE_PROPERTY_NAME] = ""
+        //defaultProperties[BrokerConstants.PERSISTENT_STORE_PROPERTY_NAME] =
+        //    BrokerConstants.DEFAULT_PERSISTENT_PATH
+        //defaultProperties[BrokerConstants.ALLOW_ANONYMOUS_PROPERTY_NAME] = true
+        //defaultProperties[BrokerConstants.AUTHENTICATOR_CLASS_NAME] = ""
+        //defaultProperties[BrokerConstants.AUTHORIZATOR_CLASS_NAME] = ""
+
+        return MemoryConfig(defaultProperties)
     }
 }

@@ -1,7 +1,9 @@
 package `in`.eswarm.narada.launch
 
 import `in`.eswarm.narada.log.LogStream
+import `in`.eswarm.narada.log.MsgType
 import `in`.eswarm.narada.mqtt.MQTTService
+import `in`.eswarm.narada.mqtt.MQTTWrapper
 import `in`.eswarm.narada.util.NetworkUtil
 import `in`.eswarm.narada.util.getAppComponent
 import android.content.Context
@@ -13,14 +15,18 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
-class LaunchViewModel(val logStream: LogStream) : ViewModel() {
+class LaunchViewModel(private val logStream: LogStream) : ViewModel() {
 
     var isServerRunning = mutableStateOf(false)
     var logs = mutableStateListOf<String>()
+    var clientsCount = mutableStateOf<Int>(0)
 
     init {
         viewModelScope.launch {
             logStream.logFlow.collect { logData ->
+                if (logData.msgType == MsgType.CONNECTION) {
+                    clientsCount.value = MQTTWrapper.clientsConnected
+                }
                 logs.add(logData.msg + "\n")
             }
         }
@@ -45,6 +51,14 @@ class LaunchViewModel(val logStream: LogStream) : ViewModel() {
             stopServer(context)
         } else {
             startServer(context)
+        }
+    }
+
+    fun serverStatus(): String {
+        return if (isServerRunning.value) {
+            "Running"
+        } else {
+            "Stopped"
         }
     }
 }
