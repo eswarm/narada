@@ -16,15 +16,17 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.ExperimentalUnitApi
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
+import androidx.navigation.NavController
 
 @OptIn(ExperimentalUnitApi::class)
 @Composable
 fun LaunchScreen(
-    launchViewModel: LaunchViewModel
+    launchViewModel: LaunchViewModel,
+    navController: NavController
 ) {
     Scaffold(
         floatingActionButton = {
-            FloatingActionButton(onClick = { /* ... */ }) {
+            FloatingActionButton(onClick = { navController.navigate("settings") }) {
                 /* FAB content */
                 Icon(
                     Icons.Filled.Settings,

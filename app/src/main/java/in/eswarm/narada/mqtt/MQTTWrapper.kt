@@ -67,7 +67,16 @@ object MQTTWrapper {
         }
     }
 
-    fun getMemoryConfig(): MemoryConfig {
+    private fun getMemoryConfig(): MemoryConfig {
+
+        // port
+        // websocket enable ?
+        // websocket port
+        // websocket path
+        // authentication enable
+        // username
+        // password
+
         val defaultProperties = Properties()
 
         defaultProperties[BrokerConstants.PORT_PROPERTY_NAME] =

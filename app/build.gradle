@@ -63,10 +63,14 @@ dependencies {
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
 
+    implementation "androidx.navigation:navigation-compose:$nav_version"
+    implementation "androidx.datastore:datastore-preferences:1.0.0"
+
     implementation('io.moquette:moquette-broker:0.15') {
         exclude group: "org.slf4j", module: "slf4j-log4j12"
     }
     implementation 'org.slf4j:slf4j-simple:1.7.25'
+
 
     //implementation 'org.apache.logging.log4j:log4j-api:2.17.2'
     //implementation 'org.apache.logging.log4j:log4j-core:2.17.2'
