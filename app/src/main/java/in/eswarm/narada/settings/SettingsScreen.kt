@@ -1,11 +1,8 @@
 package `in`.eswarm.narada.settings
 
 import `in`.eswarm.narada.preferences.AppPreferences
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -15,9 +12,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 
@@ -190,15 +185,3 @@ fun DefaultPreview() {
     }
 }
 */
-
-@Composable
-fun EntryDialog(title: String) {
-    Dialog(onDismissRequest = { }) {
-        // Draw a rectangle shape with rounded corners inside the dialog
-        Box(
-            Modifier
-                .size(200.dp, 50.dp)
-                .background(Color.White)
-        )
-    }
-}
