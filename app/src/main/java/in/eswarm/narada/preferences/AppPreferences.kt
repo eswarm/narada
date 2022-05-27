@@ -1,8 +1,10 @@
 package `in`.eswarm.narada.preferences
 
+import `in`.eswarm.narada.mqtt.ServerProperties
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.*
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlin.random.Random
 
@@ -46,6 +48,27 @@ class AppPreferences(
         get() {
             return dataStore.data.map { it[PWD] ?: PWD_DEFAULT }
         }
+
+    suspend fun getServerProperties(): ServerProperties {
+        return dataStore.data.map { preferences ->
+            val mqttPort = preferences[MQTT_PORT] ?: MQTT_PORT_DEFAULT
+            val wsEnabled = preferences[WS_ENABLED] ?: WS_ENABLED_DEFAULT
+            val wsPort = preferences[WS_PORT] ?: WS_PORT_DEFAULT
+            val wsPath = preferences[WS_PATH] ?: WS_PATH_DEFAULT
+            val authEnabled = preferences[AUTH_ENABLED] ?: AUTH_ENABLED_DEFAULT
+            val userName = preferences[UNAME] ?: UNAME_DEFAULT
+            val password = preferences[PWD] ?: PWD_DEFAULT
+            return@map ServerProperties(
+                mqttPort,
+                wsEnabled,
+                wsPort,
+                wsPath,
+                authEnabled,
+                userName,
+                password
+            )
+        }.first()
+    }
 
     suspend fun setMqttPort(value: Int) {
         dataStore.edit { it[MQTT_PORT] = value }

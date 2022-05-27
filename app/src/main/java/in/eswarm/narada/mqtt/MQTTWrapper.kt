@@ -10,8 +10,11 @@ import io.moquette.interception.InterceptHandler
 import io.netty.buffer.Unpooled
 import io.netty.handler.codec.mqtt.MqttMessageBuilders
 import io.netty.handler.codec.mqtt.MqttQoS
+import java.lang.Boolean
 import java.nio.charset.StandardCharsets
 import java.util.*
+import kotlin.Exception
+import kotlin.Int
 
 object MQTTWrapper {
 
@@ -23,12 +26,16 @@ object MQTTWrapper {
             return mqttBroker?.listConnectedClients()?.size ?: 0
         }
 
-    fun startMoquette(listener: MQTTServerListener, logStream: LogStream) {
+    fun startMoquette(
+        listener: MQTTServerListener,
+        logStream: LogStream,
+        serverProperties: ServerProperties
+    ) {
         mqttBroker = Server()
         val userHandlers: List<InterceptHandler?> = listOf(listener)
         // TODO :: make the properties configurable
 
-        mqttBroker?.startServer(getMemoryConfig(), userHandlers)
+        mqttBroker?.startServer(getMemoryConfig(serverProperties), userHandlers)
         logStream.addLog(LogData("Starting Server"))
 
         // TODO :: Is this even relevant.
@@ -67,32 +74,38 @@ object MQTTWrapper {
         }
     }
 
-    private fun getMemoryConfig(): MemoryConfig {
-
-        // port
-        // websocket enable ?
-        // websocket port
-        // websocket path
-        // authentication enable
-        // username
-        // password
-
+    private fun getMemoryConfig(serverProperties: ServerProperties): MemoryConfig {
         val defaultProperties = Properties()
 
         defaultProperties[BrokerConstants.PORT_PROPERTY_NAME] =
-            BrokerConstants.PORT.toString()
+            serverProperties.mqttPort.toString()
         defaultProperties[BrokerConstants.HOST_PROPERTY_NAME] = BrokerConstants.HOST
-        defaultProperties[BrokerConstants.WEB_SOCKET_PORT_PROPERTY_NAME] =
-            BrokerConstants.WEBSOCKET_PORT.toString()
-        defaultProperties[BrokerConstants.WEB_SOCKET_PATH_PROPERTY_NAME] =
-            BrokerConstants.WEBSOCKET_PATH
 
-        //defaultProperties[BrokerConstants.PASSWORD_FILE_PROPERTY_NAME] = ""
-        //defaultProperties[BrokerConstants.PERSISTENT_STORE_PROPERTY_NAME] =
-        //    BrokerConstants.DEFAULT_PERSISTENT_PATH
-        //defaultProperties[BrokerConstants.ALLOW_ANONYMOUS_PROPERTY_NAME] = true
-        //defaultProperties[BrokerConstants.AUTHENTICATOR_CLASS_NAME] = ""
-        //defaultProperties[BrokerConstants.AUTHORIZATOR_CLASS_NAME] = ""
+        if (serverProperties.wsEnabled) {
+            defaultProperties[BrokerConstants.WEB_SOCKET_PORT_PROPERTY_NAME] =
+                serverProperties.wsPort.toString()
+            defaultProperties[BrokerConstants.WEB_SOCKET_PATH_PROPERTY_NAME] =
+                serverProperties.wsPath
+        } else {
+            defaultProperties[BrokerConstants.WEB_SOCKET_PORT_PROPERTY_NAME] =
+                serverProperties.wsPort
+            defaultProperties[BrokerConstants.WEB_SOCKET_PATH_PROPERTY_NAME] =
+                ""
+        }
+
+        if (serverProperties.authEnabled) {
+            defaultProperties[BrokerConstants.AUTHENTICATOR_CLASS_NAME] =
+                BasicAuthenticator::class.java.canonicalName
+            defaultProperties[BasicAuthenticator.USERNAME] = serverProperties.userName
+            defaultProperties[BasicAuthenticator.PASSWORD] = serverProperties.password
+            defaultProperties[BrokerConstants.ALLOW_ANONYMOUS_PROPERTY_NAME] =
+                Boolean.FALSE.toString()
+        } else {
+            defaultProperties[BrokerConstants.ALLOW_ANONYMOUS_PROPERTY_NAME] =
+                Boolean.TRUE.toString()
+            defaultProperties[BrokerConstants.AUTHENTICATOR_CLASS_NAME] =
+                ""
+        }
 
         return MemoryConfig(defaultProperties)
     }

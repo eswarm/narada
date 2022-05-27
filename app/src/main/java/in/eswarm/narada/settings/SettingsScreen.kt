@@ -88,6 +88,8 @@ fun SettingsScreen(
             defValue.value = mqttPort.value.toString()
             dialogAction.value = { value: String ->
                 settingsViewModel.viewModelScope.launch {
+
+                    // TODO :: add input validation for the entire screen.
                     settingsViewModel.appPreferences.setMqttPort(value.toInt())
                 }
             }
