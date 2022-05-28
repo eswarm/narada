@@ -33,21 +33,21 @@ object MQTTWrapper {
     ) {
         mqttBroker = Server()
         val userHandlers: List<InterceptHandler?> = listOf(listener)
-        // TODO :: make the properties configurable
-
         mqttBroker?.startServer(getMemoryConfig(serverProperties), userHandlers)
         logStream.addLog(LogData("Starting Server"))
 
-        // TODO :: Is this even relevant.
-        println("Broker started press [CTRL+C] to stop")
+        /*
+        // Should not be needed for Android.
+        Log.i(TAG,"Broker started press [CTRL+C] to stop")
         //Bind  a shutdown hook
         Runtime.getRuntime().addShutdownHook(Thread {
-            println("Stopping broker")
+            Log.i(TAG, "Stopping broker")
             logStream.addLog(LogData("Stopping broker"))
             mqttBroker?.stopServer()
             logStream.addLog(LogData("Broker stopped"))
-            println("Broker stopped")
+            Log.i(TAG, "Broker stopped")
         })
+         */
 
         Thread.sleep(20000)
 

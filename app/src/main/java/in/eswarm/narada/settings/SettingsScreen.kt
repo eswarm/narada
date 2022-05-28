@@ -1,6 +1,7 @@
 package `in`.eswarm.narada.settings
 
 import `in`.eswarm.narada.preferences.AppPreferences
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Divider
@@ -12,9 +13,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.launch
 
 @Composable
 fun SettingsScreen(
@@ -50,11 +50,18 @@ fun SettingsScreen(
             mutableStateOf("")
         }
 
+        val isNumber = rememberSaveable {
+            mutableStateOf(false)
+        }
+
         val dialogAction = rememberSaveable {
             mutableStateOf(
                 { _: String -> }
             )
         }
+
+        val context = LocalContext.current
+
 
 
         if (showDialog.value) {
@@ -63,6 +70,7 @@ fun SettingsScreen(
                 dialogTitle.value,
                 dialogTitle.value,
                 defValue.value,
+                isNumber.value,
                 onOkRequest = dialogAction.value
             )
         }
@@ -82,15 +90,21 @@ fun SettingsScreen(
         Divider()
 
         RegularPreference(title = "MQTT Port", subtitle = mqttPort.value.toString(), onClick = {
+
+
             showDialog.value = true
             dialogTitle.value = "MQTT Port"
             labelTitle.value = "Port"
             defValue.value = mqttPort.value.toString()
+            isNumber.value = true
             dialogAction.value = { value: String ->
-                settingsViewModel.viewModelScope.launch {
-
-                    // TODO :: add input validation for the entire screen.
-                    settingsViewModel.appPreferences.setMqttPort(value.toInt())
+                val isSuccess = settingsViewModel.setMqttPort(value)
+                if (!isSuccess) {
+                    Toast.makeText(
+                        context,
+                        "Port should be a number greater than 1023",
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
             }
         })
@@ -102,9 +116,7 @@ fun SettingsScreen(
             subtitle = wsEnabled.value.toString(),
             checked = wsEnabled.value,
             onCheckedChange = {
-                settingsViewModel.viewModelScope.launch {
-                    settingsViewModel.appPreferences.setWSEnabled(it)
-                }
+                settingsViewModel.setWSEnabled(it)
             })
 
         Divider()
@@ -114,9 +126,15 @@ fun SettingsScreen(
             dialogTitle.value = "Websocket Port"
             labelTitle.value = "Port"
             defValue.value = wsPort.value.toString()
+            isNumber.value = true
             dialogAction.value = { value ->
-                settingsViewModel.viewModelScope.launch {
-                    settingsViewModel.appPreferences.setWSPort(value.toInt())
+                val isSuccess = settingsViewModel.setWSPort(value)
+                if (!isSuccess) {
+                    Toast.makeText(
+                        context,
+                        "Port should be a number greater than 1023",
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
             }
         })
@@ -128,10 +146,9 @@ fun SettingsScreen(
             dialogTitle.value = "Websocket Path"
             labelTitle.value = "Path"
             defValue.value = wsPath.value
+            isNumber.value = false
             dialogAction.value = { value ->
-                settingsViewModel.viewModelScope.launch {
-                    settingsViewModel.appPreferences.setWSPath(value)
-                }
+                settingsViewModel.setWSPath(value)
             }
         })
 
@@ -142,9 +159,7 @@ fun SettingsScreen(
             subtitle = authEnabled.value.toString(),
             checked = authEnabled.value,
             onCheckedChange = { value: Boolean ->
-                settingsViewModel.viewModelScope.launch {
-                    settingsViewModel.appPreferences.setAuthEnabled(value)
-                }
+                settingsViewModel.setAuthEnabled(value)
             })
 
         Divider()
@@ -153,11 +168,10 @@ fun SettingsScreen(
             showDialog.value = true
             dialogTitle.value = "Username"
             labelTitle.value = "Username"
+            isNumber.value = false
             defValue.value = userName.value
             dialogAction.value = { value ->
-                settingsViewModel.viewModelScope.launch {
-                    settingsViewModel.appPreferences.setUsername(value)
-                }
+                settingsViewModel.setUserName(value)
             }
         })
 
@@ -167,11 +181,10 @@ fun SettingsScreen(
             showDialog.value = true
             dialogTitle.value = "Password"
             labelTitle.value = "Password"
+            isNumber.value = false
             defValue.value = password.value
             dialogAction.value = { value ->
-                settingsViewModel.viewModelScope.launch {
-                    settingsViewModel.appPreferences.setPassword(value)
-                }
+                settingsViewModel.setPassword(value)
             }
         })
     }
