@@ -62,16 +62,24 @@ class SettingsViewModel(val appPreferences: AppPreferences) : ViewModel() {
         }
     }
 
-    fun setUserName(value: String) {
+    fun setUserName(value: String): Boolean {
+        if (value.isBlank()) {
+            return false
+        }
         viewModelScope.launch {
             appPreferences.setUsername(value)
         }
+        return true
     }
 
-    fun setPassword(value: String) {
+    fun setPassword(value: String): Boolean {
+        if (value.isBlank()) {
+            return false
+        }
         viewModelScope.launch {
             appPreferences.setPassword(value)
         }
+        return true
     }
 
 

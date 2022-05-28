@@ -1,5 +1,6 @@
 package `in`.eswarm.narada.settings
 
+import `in`.eswarm.narada.R
 import `in`.eswarm.narada.preferences.AppPreferences
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
@@ -14,6 +15,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -62,7 +64,16 @@ fun SettingsScreen(
 
         val context = LocalContext.current
 
-
+        // Strings
+        val mqttPortString = stringResource(id = R.string.mqtt_port_title)
+        val portString = stringResource(id = R.string.port)
+        val portWarningString = stringResource(id = R.string.port_warning)
+        val emptyWarningString = stringResource(id = R.string.empty_warning)
+        val userNameString = stringResource(id = R.string.username)
+        val passwordString = stringResource(id = R.string.password)
+        val wsPathString = stringResource(id = R.string.ws_path_title)
+        val wsPortString = stringResource(id = R.string.ws_port_title)
+        val pathString = stringResource(id = R.string.path)
 
         if (showDialog.value) {
             CustomDialog(
@@ -76,25 +87,24 @@ fun SettingsScreen(
         }
 
         Text(
-            text = "Settings",
+            text = stringResource(id = R.string.settings),
             style = MaterialTheme.typography.h3,
             modifier = Modifier.padding(top = 16.dp, bottom = 4.dp, start = 16.dp, end = 16.dp)
         )
 
         Text(
-            text = "Settings are applied only on server restart",
+            text = stringResource(id = R.string.settings_info),
             style = MaterialTheme.typography.body1,
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
         )
 
         Divider()
 
-        RegularPreference(title = "MQTT Port", subtitle = mqttPort.value.toString(), onClick = {
 
-
+        RegularPreference(title = mqttPortString, subtitle = mqttPort.value.toString(), onClick = {
             showDialog.value = true
-            dialogTitle.value = "MQTT Port"
-            labelTitle.value = "Port"
+            dialogTitle.value = mqttPortString
+            labelTitle.value = portString
             defValue.value = mqttPort.value.toString()
             isNumber.value = true
             dialogAction.value = { value: String ->
@@ -102,7 +112,7 @@ fun SettingsScreen(
                 if (!isSuccess) {
                     Toast.makeText(
                         context,
-                        "Port should be a number greater than 1023",
+                        portWarningString,
                         Toast.LENGTH_LONG
                     ).show()
                 }
@@ -112,7 +122,7 @@ fun SettingsScreen(
         Divider()
 
         SwitchPreference(
-            title = "Enable Websocket",
+            title = stringResource(id = R.string.enable_ws_title),
             subtitle = wsEnabled.value.toString(),
             checked = wsEnabled.value,
             onCheckedChange = {
@@ -121,10 +131,10 @@ fun SettingsScreen(
 
         Divider()
 
-        RegularPreference(title = "Websocket Port", subtitle = wsPort.value.toString(), onClick = {
+        RegularPreference(title = wsPortString, subtitle = wsPort.value.toString(), onClick = {
             showDialog.value = true
-            dialogTitle.value = "Websocket Port"
-            labelTitle.value = "Port"
+            dialogTitle.value = wsPortString
+            labelTitle.value = portString
             defValue.value = wsPort.value.toString()
             isNumber.value = true
             dialogAction.value = { value ->
@@ -132,7 +142,7 @@ fun SettingsScreen(
                 if (!isSuccess) {
                     Toast.makeText(
                         context,
-                        "Port should be a number greater than 1023",
+                        portWarningString,
                         Toast.LENGTH_LONG
                     ).show()
                 }
@@ -141,10 +151,10 @@ fun SettingsScreen(
 
         Divider()
 
-        RegularPreference(title = "Websocket Path", subtitle = wsPath.value, onClick = {
+        RegularPreference(title = wsPathString, subtitle = wsPath.value, onClick = {
             showDialog.value = true
-            dialogTitle.value = "Websocket Path"
-            labelTitle.value = "Path"
+            dialogTitle.value = wsPathString
+            labelTitle.value = pathString
             defValue.value = wsPath.value
             isNumber.value = false
             dialogAction.value = { value ->
@@ -155,7 +165,7 @@ fun SettingsScreen(
         Divider()
 
         SwitchPreference(
-            title = "Enable Authentication",
+            title = stringResource(id = R.string.enable_auth),
             subtitle = authEnabled.value.toString(),
             checked = authEnabled.value,
             onCheckedChange = { value: Boolean ->
@@ -164,27 +174,41 @@ fun SettingsScreen(
 
         Divider()
 
-        RegularPreference(title = "Username", subtitle = userName.value, onClick = {
+        RegularPreference(title = userNameString, subtitle = userName.value, onClick = {
             showDialog.value = true
-            dialogTitle.value = "Username"
-            labelTitle.value = "Username"
+            dialogTitle.value = userNameString
+            labelTitle.value = userNameString
             isNumber.value = false
             defValue.value = userName.value
             dialogAction.value = { value ->
-                settingsViewModel.setUserName(value)
+                val isSuccess = settingsViewModel.setUserName(value)
+                if (!isSuccess) {
+                    Toast.makeText(
+                        context,
+                        emptyWarningString,
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
             }
         })
 
         Divider()
 
-        RegularPreference(title = "Password", subtitle = password.value, onClick = {
+        RegularPreference(title = passwordString, subtitle = password.value, onClick = {
             showDialog.value = true
-            dialogTitle.value = "Password"
-            labelTitle.value = "Password"
+            dialogTitle.value = passwordString
+            labelTitle.value = passwordString
             isNumber.value = false
             defValue.value = password.value
             dialogAction.value = { value ->
-                settingsViewModel.setPassword(value)
+                val isSuccess = settingsViewModel.setPassword(value)
+                if (!isSuccess) {
+                    Toast.makeText(
+                        context,
+                        emptyWarningString,
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
             }
         })
     }
