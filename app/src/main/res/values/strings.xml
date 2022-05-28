@@ -5,6 +5,8 @@
     <string name="notification_mqtt_ticker">MQTT service running</string>
     <string name="fg_channel_name">MQTT service</string>
     <string name="fg_channel_description">MQTT Foreground service</string>
+
+    <!-- Settings screen -->
     <string name="settings">Settings</string>
     <string name="settings_info">"Settings are applied only on server restart"</string>
     <string name="mqtt_port_title">"MQTT Port"</string>
@@ -18,4 +20,11 @@
     <string name="path">Path</string>
     <string name="ws_port_title">"Websocket Port"</string>
     <string name="enable_ws_title">"Enable Websocket"</string>
+
+    <!--Launch screen -->
+    <string name="start_server">Start Server</string>
+    <string name="stop_server">Stop Server</string>
+    <string name="ip_address">"IP Address(Local)"</string>
+    <string name="clients_connected">"Clients Connected"</string>
+    <string name="logs">Logs</string>
 </resources>

@@ -1,5 +1,6 @@
 package `in`.eswarm.narada.launch
 
+import `in`.eswarm.narada.R
 import `in`.eswarm.narada.ui.theme.NaradaMQTTBrokerTheme
 import `in`.eswarm.narada.ui.theme.biscuitColor
 import androidx.compose.foundation.layout.*
@@ -12,6 +13,7 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.ExperimentalUnitApi
 import androidx.compose.ui.unit.TextUnit
@@ -30,7 +32,7 @@ fun LaunchScreen(
                 /* FAB content */
                 Icon(
                     Icons.Filled.Settings,
-                    contentDescription = "Settings",
+                    contentDescription = stringResource(id = R.string.settings),
                 )
             }
         },
@@ -42,7 +44,7 @@ fun LaunchScreen(
                     CornerSize(percent = 50)
                 )
             ) {
-                Text("Narada : MQTT Broker")
+                Text(stringResource(id = R.string.app_name))
             }
         }
     ) {
@@ -60,7 +62,7 @@ fun LaunchScreen(
 
             Row(modifier = Modifier.padding(vertical = Dp(4f))) {
                 Text(
-                    "IP Address(Local)",
+                    stringResource(id = R.string.ip_address),
                     style = MaterialTheme.typography.subtitle1
                 )
                 Spacer(modifier = Modifier.weight(1f))
@@ -69,7 +71,7 @@ fun LaunchScreen(
 
             Row(modifier = Modifier.padding(vertical = Dp(4f))) {
                 Text(
-                    "Clients Connected",
+                    stringResource(id = R.string.clients_connected),
                     style = MaterialTheme.typography.subtitle1
                 )
                 Spacer(modifier = Modifier.weight(1f))
@@ -86,25 +88,14 @@ fun LaunchScreen(
                         .padding(horizontal = Dp(16f))
                         .weight(1f)
                 ) {
-                    val buttonText = if (launchViewModel.isServerRunning.value) "Stop Server"
-                    else "Start Server"
+                    val buttonText =
+                        if (launchViewModel.isServerRunning.value) stringResource(id = R.string.stop_server)
+                        else stringResource(id = R.string.start_server)
                     Text(buttonText)
                 }
-
-                /*
-                Button(
-                    onClick = { launchViewModel.stopServer(context) },
-                    modifier = Modifier
-                        .padding(horizontal = Dp(8f))
-                        .weight(1f)
-                ) {
-                    Text(text = "Stop Server")
-                }
-
-                 */
             }
 
-            Text("Logs", style = MaterialTheme.typography.h5)
+            Text(stringResource(id = R.string.logs), style = MaterialTheme.typography.h5)
 
             NaradaMQTTBrokerTheme(darkTheme = true) {
                 Text(
