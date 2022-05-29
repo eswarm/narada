@@ -1,6 +1,5 @@
 package `in`.eswarm.narada.ui.theme
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.runtime.Composable
@@ -34,7 +33,6 @@ private val ColorPalette = darkColors(
 
 @Composable
 fun NaradaMQTTBrokerTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
     val colors = ColorPalette

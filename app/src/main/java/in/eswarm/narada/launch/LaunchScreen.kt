@@ -1,12 +1,11 @@
 package `in`.eswarm.narada.launch
 
 import `in`.eswarm.narada.R
-import `in`.eswarm.narada.ui.theme.NaradaMQTTBrokerTheme
-import `in`.eswarm.narada.ui.theme.biscuitColor
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CornerSize
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
@@ -97,18 +96,7 @@ fun LaunchScreen(
 
             Text(stringResource(id = R.string.logs), style = MaterialTheme.typography.h5)
 
-            NaradaMQTTBrokerTheme(darkTheme = true) {
-                Text(
-                    launchViewModel.logs.joinToString(""),
-                    color = biscuitColor,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .fillMaxHeight(0.85f)
-                        .verticalScroll(rememberScrollState())
-                        .padding(Dp(8f))
-                )
-            }
-
+            LogView(logs = launchViewModel.logs)
         }
     }
 }
