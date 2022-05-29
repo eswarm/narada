@@ -107,11 +107,9 @@ class AppPreferences(
 
     suspend fun setPassword() {
         val randomNum: Int = Random.nextInt(100000, 1000000)
-        dataStore.data.map { preferences ->
+        dataStore.edit { preferences ->
             if (!preferences.contains(PWD)) {
-                dataStore.edit { settings ->
-                    settings[PWD] = PWD_DEFAULT + randomNum
-                }
+                preferences[PWD] = PWD_DEFAULT + randomNum
             }
         }
     }
