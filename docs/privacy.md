@@ -1,4 +1,4 @@
-Privacy Policy
+# Privacy Policy
 
 
 Narada : MQTT Broker app is an Open Source app. This SERVICE is provided by at no cost and is intended for use as is.
