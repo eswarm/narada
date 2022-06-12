@@ -13,6 +13,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE
 import androidx.core.content.ContextCompat
 import kotlinx.coroutines.runBlocking
 import java.util.concurrent.ExecutorService
@@ -72,9 +73,10 @@ class MQTTService : Service() {
         val notification: Notification = NotificationCompat.Builder(this, FG_SERVICE_CHANNEL)
             .setContentTitle(getText(R.string.notification_mqtt_service_title))
             .setContentText(getText(R.string.notification_mqtt_service_content))
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setSmallIcon(R.mipmap.ic_launcher_foreground)
             .setContentIntent(pendingIntent)
             .setTicker(getText(R.string.notification_mqtt_ticker))
+            .setForegroundServiceBehavior(FOREGROUND_SERVICE_IMMEDIATE)
             .build()
 
         // Notification ID cannot be 0.
