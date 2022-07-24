@@ -16,9 +16,9 @@ import kotlinx.coroutines.launch
 
 class LaunchViewModel(private val logStream: LogStream) : ViewModel() {
 
-    var isServerRunning = mutableStateOf(false)
+    var isServerRunning = mutableStateOf(MQTTService.isMoquetteRunning)
     var logs = mutableStateListOf<String>()
-    var clientsCount = mutableStateOf<Int>(0)
+    var clientsCount = mutableStateOf(MQTTWrapper.clientsConnected)
 
     init {
         viewModelScope.launch {

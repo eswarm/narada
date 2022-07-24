@@ -44,6 +44,7 @@ class MQTTService : Service() {
     }
 
     private fun stop() {
+        isMoquetteRunning = false
         MQTTWrapper.stopMoquette()
         stopForeground(true)
         stopSelf()
@@ -57,6 +58,7 @@ class MQTTService : Service() {
                 application.preferences.getServerProperties()
             }
 
+            isMoquetteRunning = true
             MQTTWrapper.startMoquette(mqttListener, logStream, serverProperties)
         }
 
@@ -98,6 +100,7 @@ class MQTTService : Service() {
         const val CHANNEL_DEFAULT = "channel"
         const val START = "start"
         const val STOP = "stop"
+        var isMoquetteRunning: Boolean = false
 
         fun start(context: Context) {
             val intent = Intent(context, MQTTService::class.java)
