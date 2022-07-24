@@ -23,3 +23,4 @@
 #Hack, currently crashes without this, need to figure out the
 # proper class to exclude.
 -dontobfuscate
+-dontshrink
