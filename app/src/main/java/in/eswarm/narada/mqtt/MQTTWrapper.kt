@@ -107,6 +107,8 @@ object MQTTWrapper {
                 ""
         }
 
+        defaultProperties[BrokerConstants.METRICS_ENABLE_PROPERTY_NAME] = Boolean.FALSE.toString()
+
         return MemoryConfig(defaultProperties)
     }
 }

@@ -12,7 +12,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class LaunchViewModel(private val logStream: LogStream) : ViewModel() {
@@ -63,9 +62,8 @@ class LaunchViewModel(private val logStream: LogStream) : ViewModel() {
     }
 }
 
-class LaunchViewModelFactory(private val context: Context) :
-    ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+class LaunchViewModelFactory(private val context: Context) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         val logStream = context.getAppComponent().logStream
         return LaunchViewModel(logStream) as T
     }
