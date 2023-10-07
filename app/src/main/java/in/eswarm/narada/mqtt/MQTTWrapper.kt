@@ -36,19 +36,6 @@ object MQTTWrapper {
         mqttBroker?.startServer(getMemoryConfig(serverProperties), userHandlers)
         logStream.addLog(LogData("Starting Server"))
 
-        /*
-        // Should not be needed for Android.
-        Log.i(TAG,"Broker started press [CTRL+C] to stop")
-        //Bind  a shutdown hook
-        Runtime.getRuntime().addShutdownHook(Thread {
-            Log.i(TAG, "Stopping broker")
-            logStream.addLog(LogData("Stopping broker"))
-            mqttBroker?.stopServer()
-            logStream.addLog(LogData("Broker stopped"))
-            Log.i(TAG, "Broker stopped")
-        })
-         */
-
         Thread.sleep(20000)
 
         Log.i(TAG, "Before self publish")
