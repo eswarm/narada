@@ -4,14 +4,14 @@ plugins {
 }
 
 android {
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "in.eswarm.narada"
         minSdk 23
-        targetSdk 33
-        versionCode 1
-        versionName "1.0"
+        targetSdk 34
+        versionCode 2
+        versionName "1.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -31,13 +31,13 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
-        freeCompilerArgs = ['-Xjvm-default=enable']
+        freeCompilerArgs = ['-Xjvm-default=all']
     }
     buildFeatures {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion compose_version
+        kotlinCompilerExtensionVersion compose_compiler_version
     }
     packagingOptions {
         resources {
@@ -52,13 +52,13 @@ android {
 }
 
 dependencies {
-    implementation 'androidx.core:core-ktx:1.10.1'
+    implementation 'androidx.core:core-ktx:1.13.1'
     implementation "androidx.compose.ui:ui:$compose_version"
     implementation "androidx.compose.material:material:$compose_version"
     implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.1'
-    implementation 'androidx.activity:activity-compose:1.7.2'
-    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1"
+    implementation 'androidx.activity:activity-compose:1.9.0'
+    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0"
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
@@ -66,9 +66,9 @@ dependencies {
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
 
     implementation "androidx.navigation:navigation-compose:$nav_version"
-    implementation "androidx.datastore:datastore-preferences:1.0.0"
+    implementation "androidx.datastore:datastore-preferences:1.1.1"
 
-    implementation ('io.moquette:moquette-broker:0.16') {
+    implementation ('io.moquette:moquette-broker:0.17') {
         exclude group: "org.slf4j", module: "slf4j-log4j12"
     }
     //implementation 'org.slf4j:slf4j-simple:1.7.25'
