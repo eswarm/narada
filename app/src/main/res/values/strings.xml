@@ -27,4 +27,9 @@
     <string name="ip_address">"IP Address(Local)"</string>
     <string name="clients_connected">"Clients Connected"</string>
     <string name="logs">Logs</string>
+
+    <string name="no_notification_permission_title">Warning</string>
+    <string name="no_notification_permission_description">MQTT Broker works by working in the background, this would be broken without the notification permission. Please click below to request the permission. </string>
+    <string name="request_permission">Request permission</string>
+
 </resources>

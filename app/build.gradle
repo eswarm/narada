@@ -68,8 +68,10 @@ dependencies {
     implementation "androidx.navigation:navigation-compose:$nav_version"
     implementation "androidx.datastore:datastore-preferences:1.1.1"
 
-    implementation ('io.moquette:moquette-broker:0.17') {
+    implementation('io.moquette:moquette-broker:0.17') {
         exclude group: "org.slf4j", module: "slf4j-log4j12"
     }
     //implementation 'org.slf4j:slf4j-simple:1.7.25'
+
+    implementation('com.google.accompanist:accompanist-permissions:0.34.0')
 }

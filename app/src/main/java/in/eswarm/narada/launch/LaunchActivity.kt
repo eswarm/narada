@@ -23,7 +23,6 @@ import kotlinx.coroutines.launch
 class LaunchActivity : ComponentActivity() {
 
     private val mainScope = MainScope()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         NotificationUtil.createNotificationChannel(this)
@@ -66,6 +65,7 @@ class LaunchActivity : ComponentActivity() {
             }
         }
     }
+
 
     override fun onDestroy() {
         super.onDestroy()
