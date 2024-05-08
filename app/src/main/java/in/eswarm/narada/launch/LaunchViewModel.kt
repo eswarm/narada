@@ -12,6 +12,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import `in`.eswarm.narada.util.preferences
 import kotlinx.coroutines.launch
 
 class LaunchViewModel(private val logStream: LogStream) : ViewModel() {
@@ -48,8 +49,14 @@ class LaunchViewModel(private val logStream: LogStream) : ViewModel() {
     fun toggleServer(context: Context) {
         if (isServerRunning.value) {
             stopServer(context)
+            viewModelScope.launch {
+                context.preferences.setServerStopped()
+            }
         } else {
             startServer(context)
+            viewModelScope.launch {
+                context.preferences.setServerStarted()
+            }
         }
     }
 

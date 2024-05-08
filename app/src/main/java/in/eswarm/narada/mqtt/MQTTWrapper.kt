@@ -5,6 +5,7 @@ import `in`.eswarm.narada.log.LogStream
 import android.util.Log
 import io.moquette.BrokerConstants
 import io.moquette.broker.Server
+import io.moquette.broker.config.IConfig
 import io.moquette.broker.config.MemoryConfig
 import io.moquette.interception.InterceptHandler
 import io.netty.buffer.Unpooled
@@ -23,7 +24,11 @@ object MQTTWrapper {
 
     val clientsConnected: Int
         get() {
-            return mqttBroker?.listConnectedClients()?.size ?: 0
+            return try {
+                mqttBroker?.listConnectedClients()?.size ?: 0
+            } catch (e: IllegalStateException) {
+                0
+            }
         }
 
     fun startMoquette(
@@ -33,6 +38,7 @@ object MQTTWrapper {
     ) {
         mqttBroker = Server()
         val userHandlers: List<InterceptHandler?> = listOf(listener)
+        logStream.addLog(LogData("Init server."))
         mqttBroker?.startServer(getMemoryConfig(serverProperties), userHandlers)
         logStream.addLog(LogData("Starting Server"))
 
@@ -64,38 +70,38 @@ object MQTTWrapper {
     private fun getMemoryConfig(serverProperties: ServerProperties): MemoryConfig {
         val defaultProperties = Properties()
 
-        defaultProperties[BrokerConstants.PORT_PROPERTY_NAME] =
+        defaultProperties[IConfig.PORT_PROPERTY_NAME] =
             serverProperties.mqttPort.toString()
-        defaultProperties[BrokerConstants.HOST_PROPERTY_NAME] = BrokerConstants.HOST
+        defaultProperties[IConfig.HOST_PROPERTY_NAME] = BrokerConstants.HOST
 
         if (serverProperties.wsEnabled) {
-            defaultProperties[BrokerConstants.WEB_SOCKET_PORT_PROPERTY_NAME] =
+            defaultProperties[IConfig.WEB_SOCKET_PORT_PROPERTY_NAME] =
                 serverProperties.wsPort.toString()
-            defaultProperties[BrokerConstants.WEB_SOCKET_PATH_PROPERTY_NAME] =
+            defaultProperties[IConfig.WEB_SOCKET_PATH_PROPERTY_NAME] =
                 serverProperties.wsPath
         } else {
-            defaultProperties[BrokerConstants.WEB_SOCKET_PORT_PROPERTY_NAME] =
+            defaultProperties[IConfig.WEB_SOCKET_PORT_PROPERTY_NAME] =
                 serverProperties.wsPort
-            defaultProperties[BrokerConstants.WEB_SOCKET_PATH_PROPERTY_NAME] =
+            defaultProperties[IConfig.WEB_SOCKET_PATH_PROPERTY_NAME] =
                 ""
         }
 
         if (serverProperties.authEnabled) {
-            defaultProperties[BrokerConstants.AUTHENTICATOR_CLASS_NAME] =
+            defaultProperties[IConfig.AUTHENTICATOR_CLASS_NAME] =
                 BasicAuthenticator::class.java.canonicalName
             defaultProperties[BasicAuthenticator.USERNAME] = serverProperties.userName
             defaultProperties[BasicAuthenticator.PASSWORD] = serverProperties.password
-            defaultProperties[BrokerConstants.ALLOW_ANONYMOUS_PROPERTY_NAME] =
+            defaultProperties[IConfig.ALLOW_ANONYMOUS_PROPERTY_NAME] =
                 Boolean.FALSE.toString()
         } else {
-            defaultProperties[BrokerConstants.ALLOW_ANONYMOUS_PROPERTY_NAME] =
+            defaultProperties[IConfig.ALLOW_ANONYMOUS_PROPERTY_NAME] =
                 Boolean.TRUE.toString()
-            defaultProperties[BrokerConstants.AUTHENTICATOR_CLASS_NAME] =
+            defaultProperties[IConfig.AUTHENTICATOR_CLASS_NAME] =
                 ""
         }
 
         defaultProperties[BrokerConstants.METRICS_ENABLE_PROPERTY_NAME] = Boolean.FALSE.toString()
-
+        defaultProperties[IConfig.PERSISTENCE_ENABLED_PROPERTY_NAME] = Boolean.FALSE.toString()
         return MemoryConfig(defaultProperties)
     }
 }
