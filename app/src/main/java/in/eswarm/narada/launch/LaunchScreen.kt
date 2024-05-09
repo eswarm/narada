@@ -1,5 +1,8 @@
 package `in`.eswarm.narada.launch
 
+import android.Manifest
+import android.os.Build
+import android.os.Build.VERSION_CODES.TIRAMISU
 import `in`.eswarm.narada.R
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,6 +13,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -18,13 +22,19 @@ import androidx.compose.ui.unit.ExperimentalUnitApi
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.navigation.NavController
+import androidx.compose.ui.unit.dp
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
 
-@OptIn(ExperimentalUnitApi::class)
+@OptIn(ExperimentalUnitApi::class, ExperimentalPermissionsApi::class)
 @Composable
 fun LaunchScreen(
     launchViewModel: LaunchViewModel,
     navController: NavController
 ) {
+    val notifPermissionState = rememberPermissionState(Manifest.permission.POST_NOTIFICATIONS)
+
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(onClick = { navController.navigate("settings") }) {
@@ -46,7 +56,7 @@ fun LaunchScreen(
                 Text(stringResource(id = R.string.app_name))
             }
         }
-    ) {
+    ) { padding ->
 
         Column(modifier = Modifier.padding(top = Dp(32f), start = Dp(16f), end = Dp(16f))) {
 
@@ -96,11 +106,25 @@ fun LaunchScreen(
 
             Text(stringResource(id = R.string.logs), style = MaterialTheme.typography.h5)
 
-            LogView(logs = launchViewModel.logs)
+            if (Build.VERSION.SDK_INT < TIRAMISU || notifPermissionState.status.isGranted) {
+                LogView(logs = launchViewModel.logs)
+            } else {
+                Column(modifier = Modifier.padding(vertical = Dp(16f))) {
+
+                    Text(text = stringResource(id = R.string.no_notification_permission_description))
+
+                    Button(
+                        modifier = Modifier
+                            .padding(all = 16.dp)
+                            .align(Alignment.CenterHorizontally),
+                        onClick = { notifPermissionState.launchPermissionRequest() }) {
+                        Text(text = stringResource(R.string.request_permission))
+                    }
+                }
+            }
         }
     }
 }
-
 
 /*
 @Preview(showBackground = true)

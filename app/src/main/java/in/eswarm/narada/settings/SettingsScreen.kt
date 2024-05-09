@@ -27,9 +27,11 @@ fun SettingsScreen(
 ) {
     val scrollState = rememberScrollState()
 
-    return Column(modifier = Modifier
-        .fillMaxSize()
-        .verticalScroll(scrollState)) {
+    return Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(scrollState)
+    ) {
 
         val showDialog = remember { mutableStateOf(false) }
 
@@ -62,11 +64,12 @@ fun SettingsScreen(
             mutableStateOf(false)
         }
 
-        val dialogAction = rememberSaveable {
+        val dialogAction = remember {
             mutableStateOf(
                 { _: String -> }
             )
         }
+
 
         val context = LocalContext.current
 

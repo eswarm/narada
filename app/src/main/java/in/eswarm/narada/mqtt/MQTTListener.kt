@@ -50,6 +50,11 @@ class MQTTServerListener(private val logStream: LogStream) : AbstractInterceptHa
         log(logMsg, MsgType.MESSAGE)
     }
 
+    override fun onSessionLoopError(error: Throwable?) {
+        val logMsg = "onSessionLoopError ${error?.message}"
+        log(logMsg, MsgType.CONNECTION)
+    }
+
     private fun log(logMsg: String, msgType: MsgType) {
         Log.i(TAG, logMsg)
         logStream.addLog(LogData(logMsg, msgType, LogType.INFO))

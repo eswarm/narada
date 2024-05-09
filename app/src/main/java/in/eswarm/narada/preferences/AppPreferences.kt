@@ -49,6 +49,11 @@ class AppPreferences(
             return dataStore.data.map { it[PWD] ?: PWD_DEFAULT }
         }
 
+    val isServerStarted: Flow<Boolean>
+        get() {
+            return dataStore.data.map { it[SERVER_STARTED] ?: false }
+        }
+
     suspend fun getServerProperties(): ServerProperties {
         return dataStore.data.map { preferences ->
             val mqttPort = preferences[MQTT_PORT] ?: MQTT_PORT_DEFAULT
@@ -98,6 +103,14 @@ class AppPreferences(
         dataStore.edit { it[PWD] = value }
     }
 
+    suspend fun setServerStarted() {
+        dataStore.edit { it[SERVER_STARTED] = true }
+    }
+
+    suspend fun setServerStopped() {
+        dataStore.edit { it[SERVER_STARTED] = false }
+    }
+
     init {
         dataStore.data
             .map { prefs ->
@@ -122,6 +135,7 @@ class AppPreferences(
         val AUTH_ENABLED = booleanPreferencesKey("auth_enabled")
         val UNAME = stringPreferencesKey("username")
         val PWD = stringPreferencesKey("password")
+        val SERVER_STARTED = booleanPreferencesKey("server_started")
 
         const val MQTT_PORT_DEFAULT = 1883
         const val WS_ENABLED_DEFAULT = true
