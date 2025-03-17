@@ -1,5 +1,6 @@
 package `in`.eswarm.narada.launch
 
+import android.annotation.SuppressLint
 import `in`.eswarm.narada.settings.SettingsScreen
 import `in`.eswarm.narada.settings.SettingsViewModelFactory
 import `in`.eswarm.narada.ui.theme.NaradaMQTTBrokerTheme
@@ -10,7 +11,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
@@ -22,6 +22,7 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 
+@SuppressLint("CustomSplashScreen")
 class LaunchActivity : ComponentActivity() {
 
     private val mainScope = MainScope()
