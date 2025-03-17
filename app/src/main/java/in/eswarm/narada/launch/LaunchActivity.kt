@@ -8,7 +8,9 @@ import `in`.eswarm.narada.util.preferences
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
@@ -25,8 +27,9 @@ class LaunchActivity : ComponentActivity() {
     private val mainScope = MainScope()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        NotificationUtil.createNotificationChannel(this)
+        enableEdgeToEdge()
 
+        NotificationUtil.createNotificationChannel(this)
         mainScope.launch {
             preferences.setPassword()
         }
