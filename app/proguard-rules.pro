@@ -290,3 +290,14 @@
 -dontwarn sun.security.x509.X500Name
 -dontwarn sun.security.x509.X509CertImpl
 -dontwarn sun.security.x509.X509CertInfo
+-dontwarn com.codahale.metrics.Gauge
+-dontwarn com.codahale.metrics.Histogram
+-dontwarn com.codahale.metrics.Meter
+-dontwarn com.codahale.metrics.Metric
+-dontwarn com.codahale.metrics.MetricFilter
+-dontwarn com.codahale.metrics.MetricRegistry
+-dontwarn com.codahale.metrics.Snapshot
+-dontwarn com.codahale.metrics.Timer
+-dontwarn com.github.luben.zstd.ZstdInputStreamNoFinalizer
+-dontwarn com.github.luben.zstd.util.Native
+-dontwarn org.osgi.annotation.bundle.Export
